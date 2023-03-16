@@ -1,0 +1,116 @@
+{% set system_info = system_info.to_json() %}
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Monitor</title>
+  <link rel="stylesheet" href="https://api.fontshare.com/v2/css?f[]=satoshi@900,700,500,300,400&display=swap">
+  <link rel="stylesheet" href="{{ url_for('static', filename= 'assets/css/reset.css') }}">
+  <link rel="stylesheet" href="{{ url_for('static', filename= 'assets/css/style.css') }}">
+</head>
+<body>
+  <header class="header">
+    <a href="/">
+      <h1 class="logo">Monitor</h1>
+    </a>
+    <a href="https://antoinek.fr" target="_blank" rel="noopener noreferrer">
+      <p class="made">Design inspired by Armoury Crate and antoinek.fr</p>
+    </a>
+  </header>
+  <div class="container">
+    <div class="specs">
+      <h1 class="specs-title">Bonjour {{ system_info.username }}</h1>
+      <p class="specs-text">
+        Vous êtes sur {{ system_info.system }} {{ system_info.release }} et le nom de votre machine est {{ system_info.hostname }} et votre adress ip local est {{ system_info.ip_address }},
+        bienvenue sur Monitor l'outil qui vous permet de surveiller votre machine en temps réel. 
+      </p>
+    </div>
+    <div class="details-container">
+      <div class="details-item">
+        <div class="details-item-header">Statistiques du CPU</div>
+        <div class="details-item-content">
+          <div class="details-item-content-item">
+            <div class="details-item-content-item-label">Fréquence <span>({{ system_info.cpu_freq }}MHz)</span></div>
+            <progress class="details-item-content-item-progress" value="{{ system_info.cpu_freq }}" max="{{ system_info.cpu_max_freq }}"></progress>
+          </div>
+          <div class="details-item-content-item">
+            <div class="details-item-content-item-label">Utilisation <span>({{ system_info.cpu_usage }}%)</span></div>
+            <progress class="details-item-content-item-progress" value="{{ system_info.cpu_usage }}" max="100"></progress>
+          </div>
+          <div class="details-item-content-item">
+            <div class="details-item-content-item-label">Nom</div>
+            <div class="details-item-content-item-value">
+              {{ system_info.cpu_name }}
+            </div>
+          </div>
+          <div class="details-item-content-item row">
+            <div class="details-item-content-item-label">Nombre de coeurs</div>
+            <div class="details-item-content-item-value">{{ system_info.cpu_cores }}</div>
+          </div>
+        </div>
+      </div>
+      <div class="details-item">
+        <div class="details-item-header">Statistiques du GPU</div>
+        <div class="details-item-content">
+          {% for gpu in system_info.gpus.gpus %}
+            <div class="details-item-content-item">
+              <div class="details-item-content-item-label">Fréquence <span>({{ gpu['memory.used'] }}MHz)</span></div>
+              <progress class="details-item-content-item-progress" value="{{ gpu['memory.used'] }}" max="{{ gpu['memory.total'] }}"></progress>
+            </div>
+            <div class="details-item-content-item">
+              <div class="details-item-content-item-label">Utilisation <span>({{ gpu['utilization.gpu'] }}%)</span></div>
+              <progress class="details-item-content-item-progress" value="{{ gpu['utilization.gpu'] }}" max="100"></progress>
+            </div>
+            <div class="details-item-content-item">
+              <div class="details-item-content-item-label">Nom</div>
+              <div class="details-item-content-item-value">
+                {{ gpu.name }}
+              </div>
+            </div>
+            <div class="details-item-content-item">
+              <div class="details-item-content-item-label">UUID</div>
+              <div class="details-item-content-item-value">
+                {{ gpu.uuid }}
+              </div>
+            </div>
+            <div class="details-item-content-item row">
+              <div class="details-item-content-item-label">Température</div>
+              <div class="details-item-content-item-value">{{ gpu['temperature.gpu'] }}°C</div>
+            </div>
+          {% endfor %}
+        </div>
+      </div>
+      <div class="details-item">
+        <div class="details-item-header">Mémoire et stockage</div>
+        <div class="details-item-content">
+          {% for d in system_info.disk_usage %}
+            <div class="details-item-content-item">
+              <div class="details-item-content-item-label">Stockage de la partition {{ d.name }} <span>({{ d.usage.percent }}%)</span></div>
+              <progress class="details-item-content-item-progress" value="{{ d.usage.used }}" max="{{ d.usage.total }}"></progress>
+            </div>
+          {% endfor %}
+          <div class="details-item-content-item">
+            <div class="details-item-content-item-label">Mémoire vive <span>({{ system_info.mem_percent }}%)</span></div>
+            <progress class="details-item-content-item-progress" value="{{ system_info.mem_used }}" max="{{ system_info.mem_total }}"></progress>
+          </div>
+        </div>
+      </div>
+      <div class="details-item">
+        <div class="details-item-header"></div>
+        <div class="details-item-content-soon">
+          En cours de développement...
+        </div>
+      </div>
+      <div class="details-item">
+        <div class="details-item-header"></div>
+        <div class="details-item-content-soon">
+          En cours de développement...
+        </div>
+      </div>
+    </div>
+  </div>
+</body>
+</html>
