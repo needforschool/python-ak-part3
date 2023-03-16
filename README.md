@@ -18,7 +18,11 @@ pip install -r requirements.txt
 python flask --app app --debug run
 ```
 
-# Améliorations
+## Améliorations
 
 - [ ] Rafraichissement des données grace à Flask
 - [ ] Ajout de données sur le matériel (webcam, micro, etc...)
+
+## Demo
+
+![Demo](assets/image.png)
